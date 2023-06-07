@@ -24,12 +24,17 @@ func main() {
 		fmt.Println(string(bytes))
 	}
 
-	user, err := api.GetUserByEmail(os.Getenv("USER_EMAIL"))
+	email := os.Getenv("USER_EMAIL")
+	if email == "" {
+		panic("USER_EMAIL is not set")
+	}
+
+	user, err := api.GetUserByEmail(email)
 	if err != nil {
 		panic(err)
 	}
 
-	channel, timestamp, text, err := api.SendMessage(user.ID, slack.MsgOptionText("Hello, world! https://google.com", false))
+	channel, timestamp, text, err := api.SendMessage(user.ID, slack.MsgOptionText(fmt.Sprintf("Hello %s! https://google.com", email), false))
 	if err != nil {
 		panic(err)
 	}
